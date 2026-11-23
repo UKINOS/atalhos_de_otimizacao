@@ -3,6 +3,7 @@ Aqui, a gente é o chefe q apenas manda nos outros e quase não faz nada kkkkkkk
 """
 
 # Importação interna
+import os
 import sys
 
 
@@ -24,7 +25,8 @@ deteccao_codigo_externo = None
 
 try:
   # Define pasta padrão
-  sys.path.append(".")
+  base_dir = os.path.dirname(os.path.abspath(sys.executable if "__compiled__" in globals() else __file__))
+  if base_dir not in sys.path: sys.path.insert(0, base_dir)
   
   # Código externo - Não é necessário pra execução do código principal
   import codigo_externo
@@ -33,10 +35,11 @@ try:
   deteccao_codigo_externo = True
 
 except ImportError as erro:
-  saida_terminal.desenhar_tela_terminal(texto=f"Code alert 1 - Resposta esperada - {erro}", formatacao=["NEGRITO", "TEXTO_PRETO", "FUNDO_AMARELO"], add_to_buffer_text=False)
-  saida_terminal.desenhar_tela_terminal(texto="Code alert 1 - Apesar de sua presença ser esperada, não é necessário que \"codigo_externo.py\" esteja presente para a funcionalidade do main...", add_to_buffer_text=False)
-  saida_terminal.desenhar_tela_terminal(formatacao=["RESET"], quebra_de_linha=False)
-  input("Aperte enter para continuar...")
+  # Esse arquivo foi lido corretamente? Se sim o erro aconteceu dentro do arquivo e não porque ele não existe...
+  if os.path.exists(os.path.join(base_dir, "codigo_externo.py")):
+    saida_terminal.desenhar_tela_terminal(texto=f"Erro interno no codigo_externo.py: {erro}", formatacao=["NEGRITO", "TEXTO_PRETO", "FUNDO_AMARELO"], add_to_buffer_text=False)
+    saida_terminal.desenhar_tela_terminal(formatacao=["RESET"], quebra_de_linha=False)
+    os.system("pause")
   
   deteccao_codigo_externo = False
   
