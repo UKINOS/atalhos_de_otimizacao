@@ -19,13 +19,29 @@ import saida_terminal
 
 
 
+
+def get_exe_path():
+  """Função para descobrir onde o código está sendo executado
+
+  Returns:
+      str: local onde o arquivo está sendo executado
+  """
+  compiled = globals().get("__compiled__")
+  if compiled is not None:
+    exe_dir = compiled.containing_dir
+    exe_name = os.path.basename(sys.executable)
+    return os.path.join(exe_dir, exe_name)
+  return os.path.abspath(__file__)
+
+
+
 # Código externo - Desnecessário
 # Toda a importação de código extra deve ser lidada pela biblioteca abaixo
 deteccao_codigo_externo = None
 
 try:
   # Define pasta padrão
-  base_dir = os.path.dirname(os.path.abspath(sys.executable if "__compiled__" in globals() else __file__))
+  base_dir = os.path.dirname(get_exe_path())
   if base_dir not in sys.path: sys.path.insert(0, base_dir)
   
   # Código externo - Não é necessário pra execução do código principal
