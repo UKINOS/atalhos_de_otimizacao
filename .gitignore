@@ -1,0 +1,9 @@
+*.pyc
+*.json
+*.c
+*.pyd
+*.dll
+*.xml
+*.exe
+*.txt
+*.html
